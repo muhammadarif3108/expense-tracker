@@ -9,10 +9,12 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['react-hot-toast', 'recharts'],
-          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('firebase')) return 'firebase';
+            if (id.includes('recharts') || id.includes('react-hot-toast')) return 'ui';
+            if (id.includes('react')) return 'vendor';
+          }
         }
       }
     }
